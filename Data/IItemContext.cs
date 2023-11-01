@@ -1,7 +1,7 @@
 ﻿using MongoDB.Driver;
-using Play.Catalog.Entities;
+using Play.Common.Entities;
 
-namespace Play.Catalog.Data.Interfaces;
+namespace Play.Common.Data;
 
 public interface IItemContext<T> where T : IEntity
 {

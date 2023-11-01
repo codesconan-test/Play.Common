@@ -1,9 +1,10 @@
-﻿using MongoDB.Driver;
-using Play.Catalog.Data.Interfaces;
-using Play.Catalog.Entities;
-using Play.Catalog.Repositories.Interfaces;
+﻿using System.Linq.Expressions;
+using MongoDB.Driver;
+using Play.Common.Data;
+using Play.Common.Entities;
+using Play.Common.Repositories.Interfaces;
 
-namespace Play.Catalog.Repositories;
+namespace Play.Common.Repositories;
 
 /// <summary>
 /// Repository class for managing items.
@@ -27,6 +28,25 @@ public class ItemRepository<T> : IItemRepository<T> where T : IEntity
         return await _context.Items.Find(p => true).ToListAsync();
     }
 
+    public async Task<IEnumerable<T>> GetAllAsync()
+    {
+        if(_context.Items == null)
+        {
+            throw new ArgumentNullException(nameof(_context.Items));
+        }
+        return await _context.Items.Find(p => true).ToListAsync();
+    }
+
+    public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>> filter)
+    {
+        if(_context.Items == null)
+        {
+            throw new ArgumentNullException(nameof(_context.Items));
+        }
+        
+        return await _context.Items.Find(filter).ToListAsync();
+    }
+
     public async Task CreateAsync(T item)
     {
        if (item == null)
@@ -45,6 +65,16 @@ public class ItemRepository<T> : IItemRepository<T> where T : IEntity
         }
         
         return await _context.Items.Find(p => p.Id == id).FirstOrDefaultAsync();
+    }
+
+    public async Task<T?> GetAsync(Expression<Func<T, bool>> filter)
+    {
+        if(filter == null)
+        {
+            throw new ArgumentNullException(nameof(filter));
+        }
+        
+        return await _context.Items.Find(filter).FirstOrDefaultAsync();
     }
 
     public async Task<bool> UpdateAsync(Guid id, T item)

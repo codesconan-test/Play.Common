@@ -1,4 +1,4 @@
-namespace Play.Catalog.Entities;
+namespace Play.Common.Entities;
 
 /// <summary>
 /// Represents an entity with a unique identifier.
